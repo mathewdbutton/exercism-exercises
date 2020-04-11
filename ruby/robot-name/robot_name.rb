@@ -1,44 +1,43 @@
-require "securerandom"
-
-
 class Robot
-
   attr_reader :name
 
-  @name_register = {}
+  NAME_SET = ("AA000".."ZZ999").to_a
+
+  @name_register = []
 
   def initialize
     @name = assign_name
   end
 
   def self.name_register
+    if @name_register.empty?
+      @name_register = NAME_SET.dup
+    end
     @name_register
   end
 
   def self.forget
-
+    @name_register = []
   end
 
   def reset
-    self.class.name_register.delete(String(name))
+    name_register << name
     @name = assign_name
   end
 
   private
 
   def assign_name
-    loop do
-      new_name = generate_name
-      unless self.class.name_register.has_key?(new_name)
-        self.class.name_register[new_name] = self
-        return new_name
-      end
-    end
+    name_register.delete_at(random_index)
   end
 
-  def generate_name
-    ('A'..'Z').to_a.freeze.sample(2).join + Random.rand(999).to_s.rjust(3, '0')
+  def name_register
+    self.class.name_register
   end
 
+  def random_index
+    return 0 if name_register.length - 1 == 0
 
+    Random.rand(name_register.length - 1)
+  end
 end

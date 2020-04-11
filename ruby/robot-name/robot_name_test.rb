@@ -78,7 +78,6 @@ class RobotTest < Minitest::Test
     seen_names = Hash.new(0)
     robots = []
     while seen_names.size < all_names_count && Time.now < time_limit
-      puts("#{(time_limit - Time.now)} : #{robots.size}")
       robot = Robot.new
       seen_names[robot.name] += 1
       robots << robot
