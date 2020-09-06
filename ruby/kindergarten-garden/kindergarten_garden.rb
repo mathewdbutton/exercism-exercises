@@ -23,10 +23,7 @@ class Garden
     segmented_diagram = diagram. #VCRRGVRG\nRVGCCGCV
                         split("\n"). # ["VCRRGVRG", "RVGCCGCV"]
                         map { |a|
-                          a. # "VCRRGVRG"
-                          chars. # ["V", "C", "R", "R", "G", "V", "R", "G"]
-                          each_slice(2).
-                          map(&:join) # ["VC", "RR", "GV", "RG"]
+                          a.scan(/../)
                          } # [["VC", "RR", "GV", "RG"], ["RV", "GC", "CG", "CV"]]
 
     @parsed_diagram ||= students.zip(
@@ -40,6 +37,6 @@ class Garden
   def method_missing(method_name, *args, &block)
     super unless students.include?(method_name)
     student = method_name
-    parsed_diagram[student].chars.map { |c| PLANTS[c]}
+    parsed_diagram[student].chars.map { |c| PLANTS[c] }
   end
 end
