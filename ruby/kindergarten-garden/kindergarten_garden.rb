@@ -17,8 +17,6 @@ class Garden
     @diagram = diagram
   end
 
-  private
-
   def parsed_diagram
     segmented_diagram = diagram.split("\n")
     students.zip(merge_rows(segmented_diagram[0], segmented_diagram[1])).to_h
@@ -28,15 +26,16 @@ class Garden
   def merge_rows(first_row, second_row, output=[])
     return output if first_row.empty?
                     # ["VC" + "RV"]
-    students_cups = [first_row.slice(..1) + second_row.slice(..1)]
-               # merge_rows("RRGVRG","RRGVRG", [] + ["VCRV"])
-    merge_rows(first_row.slice(2..), second_row.slice(2..), output + students_cups)
+    students_cups = first_row.slice(0,2) + second_row.slice(0,2)
+                    # [ :violet, :clove, :radish, :violet]
+    mapped_plants = students_cups.chars.map{ |c| PLANTS[c] }
+               # merge_rows("RRGVRG","RRGVRG", [] + [:violet,:clove,:radish,:violet])
+    merge_rows(first_row.slice(2..), second_row.slice(2..), output + [mapped_plants])
   end
-
 
   def method_missing(method_name, *args, &block)
     super unless students.include?(method_name)
     student = method_name
-    parsed_diagram[student].chars.map { |c| PLANTS[c] }
+    parsed_diagram[student]
   end
 end
