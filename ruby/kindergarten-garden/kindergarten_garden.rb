@@ -20,17 +20,17 @@ class Garden
   private
 
   def parsed_diagram
-    segmented_diagram = diagram. #VCRRGVRG\nRVGCCGCV
-                        split("\n"). # ["VCRRGVRG", "RVGCCGCV"]
-                        map { |a|
-                          a.scan(/../)
-                         } # [["VC", "RR", "GV", "RG"], ["RV", "GC", "CG", "CV"]]
+    segmented_diagram = diagram.split("\n")
+    students.zip(merge_rows(segmented_diagram[0], segmented_diagram[1])).to_h
+  end
 
-    @parsed_diagram ||= students.zip(
-      segmented_diagram[0].zip(segmented_diagram[1] # [["VC", "RV"], ["RR", "GC"], ["GV", "CG"], ["RG", "CV"]]
-      ).map(&:join) # ["VCRV", "RRGC", "GVCG", "RGCV"]
-    ) # [[:alice, "VCRV"], [:bob, "RRGC"], [:charlie, "GVCG"], [:david, "RGCV"], [:eve, nil], [:fred, nil], [:ginny, nil], [:harriet, nil], [:ileana, nil], [:joseph, nil], [:kincaid, nil], [:larry, nil]]
-      .to_h # {:alice=>"VCRV", :bob=>"RRGC", :charlie=>"GVCG", :david=>"RGCV", :eve=>nil, :fred=>nil, :ginny=>nil, :harriet=>nil, :ileana=>nil, :joseph=>nil, :kincaid=>nil, :larry=>nil}
+                # "VCRRGVRG","RVGCCGCV", []
+  def merge_rows(first_row, second_row, output=[])
+    return output if first_row.empty?
+                    # ["VC" + "RV"]
+    students_cups = [first_row.slice(..1) + second_row.slice(..1)]
+               # merge_rows("RRGVRG","RRGVRG", [] + ["VCRV"])
+    merge_rows(first_row.slice(2..), second_row.slice(2..), output + students_cups)
   end
 
 
